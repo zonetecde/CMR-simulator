@@ -9,6 +9,7 @@ export default interface Coordonnees {
 		| 'TopLeft'
 		| 'TopRight'
 		| 'BottomLeft'
-		| 'BottomRight';
+		| 'BottomRight'
+		| string;
 	int: number;
 }
