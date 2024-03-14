@@ -102,7 +102,7 @@
 </script>
 
 <div class="w-screen h-screen" id="main">
-	<div class="h-screen pt-5 pl-5 xl:w-[60%] lg:w-[50%] w-[40%]">
+	<div class="h-screen pt-5 pl-5 xl:w-[60%] lg:w-[50%] w-full md:w-[40%] md:mt-0 mt-36">
 		<Lac bind:this={lac} {minPoisson} {maxPoisson} {vitesse} {lacSize} />
 
 		<h1 class="text-5xl font-bold">CMR Simulator</h1>
@@ -266,7 +266,7 @@
 					>Recommencer la simulation
 				</button>
 
-				<p class="text-3xl absolute right-8 bottom-4">
+				<p class="text-3xl mt-8 md:mt-0 block md:absolute right-8 bottom-4">
 					Moyenne des estimations :
 					{#if nbrePoissonRecuperes && nbrePoissonRecuperes.length > 0}
 						<span class="font-bold">
