@@ -192,35 +192,35 @@
 					<input type="range" min="1" max="600" class="w-full" bind:value={vitesse} />
 				</label>
 
-				<div class="grid grid-cols-2 grid-rows-2 gap-x-8 w-full">
+				<div class="grid grid-cols-2 grid-rows-2 gap-x-8 gap-y-3 w-full">
 					<button
-						class="px-4 pt-2 pb-1.5 text-xl bg-[#a1e3c4] border-[#6ca472] shadow-xl rounded-xl border-4 mt-10 duration-150 hover:bg-[#84c3a6] disabled:bg-gray-300 disabled:border-gray-400"
+						class="px-4 pt-2 pb-1.5 text-xl bg-[#a1e3c4] border-[#6ca472] shadow-xl rounded-xl border-4 duration-150 hover:bg-[#84c3a6] disabled:bg-gray-300 disabled:border-gray-400"
 						on:click={handleCaptureButtonClicked}
 						disabled={didCapture}
 						>Capture
 					</button>
 					<button
-						class="px-4 pt-2 pb-1.5 text-xl bg-[#a1e3c4] border-[#6ca472] shadow-xl rounded-xl border-4 mt-10 duration-150 hover:bg-[#84c3a6] disabled:bg-gray-300 disabled:border-gray-400"
+						class="px-4 pt-2 pb-1.5 text-xl bg-[#a1e3c4] border-[#6ca472] shadow-xl rounded-xl border-4 duration-150 hover:bg-[#84c3a6] disabled:bg-gray-300 disabled:border-gray-400"
 						disabled={(!didCapture && !didMark) || didMark || !poissonsCaptures}
 						on:click={handleMarquageButtonClicked}
 						>Marquage
 					</button>
 					<button
-						class="px-4 pt-2 pb-1.5 text-xl bg-[#a1e3c4] border-[#6ca472] shadow-xl rounded-xl border-4 mt-10 duration-150 hover:bg-[#84c3a6] disabled:bg-gray-300 disabled:border-gray-400"
+						class="px-4 pt-2 pb-1.5 text-xl bg-[#a1e3c4] border-[#6ca472] shadow-xl rounded-xl border-4 duration-150 hover:bg-[#84c3a6] disabled:bg-gray-300 disabled:border-gray-400"
 						on:click={handleRecaptureButtonClicked}
 						disabled={!didMark || (poissonsCaptures && poissonsCaptures.length > 0)}
 						>Recapture
 					</button>
 					<button
-						class="px-4 pt-2 pb-1.5 text-xl bg-[#a1e3c4] border-[#6ca472] shadow-xl rounded-xl border-4 mt-10 duration-150 hover:bg-[#84c3a6] disabled:bg-gray-300 disabled:border-gray-400"
+						class="px-4 pt-2 pb-1.5 text-xl bg-[#a1e3c4] border-[#6ca472] shadow-xl rounded-xl border-4 duration-150 hover:bg-[#84c3a6] disabled:bg-gray-300 disabled:border-gray-400"
 						disabled={!(poissonsCaptures && poissonsCaptures.length > 0) || !didMark}
 						on:click={handleCompterButtonClicked}
-						>Compter les poissons marqués
+						>Compter
 					</button>
 				</div>
 
 				<button
-					class="w-80 ml-auto px-4 pt-2 pb-1.5 text-xl bg-[#d5e3a1] border-[#9aa46c] shadow-xl rounded-xl mt-3 border-4 duration-150 hover:bg-[#b0c384]"
+					class="w-80 px-4 pt-2 pb-1.5 text-xl bg-[#d5e3a1] border-[#9aa46c] shadow-xl rounded-xl mt-3 border-4 duration-150 hover:bg-[#b0c384]"
 					on:click={() => {
 						location.reload();
 					}}
@@ -228,10 +228,14 @@
 				</button>
 
 				<!-- Tableau -->
-				<div class="mt-12 flex flex-wrap overflow-auto max-h-[800px] overflow-y-scroll">
+				<div
+					class="mt-4 bg-blue-500 rounded-xl justify-center flex flex-wrap overflow-auto max-h-[800px] overflow-y-scroll"
+				>
 					{#each nbrePoissonRecuperes as donnee}
-						<div class="mt-5">
-							<p class="text-2xl font-bold">Capture numéro {donnee.id}</p>
+						<div class="p-4">
+							<p class="text-2xl font-bold text-center underline mb-4">
+								Capture numéro {donnee.id}
+							</p>
 							<table class="w-[450px] text-left">
 								<tr>
 									<th></th>
@@ -260,7 +264,7 @@
 							{moyenne.toFixed(2)}
 						</span>
 					{:else}
-						<span class="font-bold text-lg">lancez d'abord des recapatures</span>
+						<br /><span class="font-bold text-lg">lancez d'abord des recapatures</span>
 					{/if}
 				</p>
 			</div>
@@ -284,3 +288,13 @@
 		</div>
 	{/if}
 </div>
+
+<style>
+	table,
+	th,
+	td {
+		border: 1px solid black;
+		border-collapse: collapse;
+		padding: 5px;
+	}
+</style>
