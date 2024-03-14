@@ -15,6 +15,7 @@
 	let didMark: boolean = false;
 	let poissonsCaptures: Coordonnees[];
 	let nbrePoisson = 0;
+	let isCapturing = false;
 
 	let nbrePoissonMarque: number = 0;
 	let nbrePoissonRecuperes: {
@@ -49,7 +50,9 @@
 	}
 
 	async function handleRecaptureButtonClicked() {
+		isCapturing = true;
 		poissonsCaptures = await lac.captureFish(toCapture);
+		isCapturing = false;
 	}
 
 	function handleMarquageButtonClicked() {
@@ -210,7 +213,7 @@
 					<button
 						class="px-4 pt-2 pb-1.5 text-xl bg-[#a1e3c4] border-[#6ca472] shadow-xl rounded-xl border-4 duration-150 hover:bg-[#84c3a6] disabled:bg-gray-300 disabled:border-gray-400"
 						on:click={handleRecaptureButtonClicked}
-						disabled={!didMark || (poissonsCaptures && poissonsCaptures.length > 0)}
+						disabled={!didMark || (poissonsCaptures && poissonsCaptures.length > 0) || isCapturing}
 						>Recapture
 					</button>
 					<button
@@ -221,6 +224,40 @@
 					</button>
 				</div>
 
+				<!-- Tableau -->
+				<div
+					class="mt-4 bg-green-300 border-4 border-green-500 rounded-xl justify-center flex flex-wrap overflow-auto max-h-[800px] overflow-y-scroll"
+				>
+					{#if nbrePoissonRecuperes.length > 0}
+						{#each nbrePoissonRecuperes as donnee}
+							<div class="p-4">
+								<p class="text-2xl font-bold text-center underline mb-4">
+									Capture numéro {donnee.id}
+								</p>
+								<table class="w-[40%] text-left">
+									<tr>
+										<th></th>
+										<th>Lac</th>
+										<th>Echantillon</th>
+									</tr>
+									<tr>
+										<td>Marqués</td>
+										<td>{nbrePoissonMarque}</td>
+										<td>{donnee.nbreMarque}</td>
+									</tr>
+									<tr>
+										<td>Total</td>
+										<td>{donnee.estimation.toFixed(2)}</td>
+										<td>{donnee.nbrePoissonDansEchantillon}</td>
+									</tr>
+								</table>
+							</div>
+						{/each}
+					{:else}
+						<p class="text-2xl font-bold text-center py-5">Aucune capture pour le moment</p>
+					{/if}
+				</div>
+
 				<button
 					class="w-80 px-4 pt-2 pb-1.5 text-xl bg-[#d5e3a1] border-[#9aa46c] shadow-xl rounded-xl mt-3 border-4 duration-150 hover:bg-[#b0c384]"
 					on:click={() => {
@@ -228,36 +265,6 @@
 					}}
 					>Recommencer la simulation
 				</button>
-
-				<!-- Tableau -->
-				<div
-					class="mt-4 bg-blue-500 rounded-xl justify-center flex flex-wrap overflow-auto max-h-[800px] overflow-y-scroll"
-				>
-					{#each nbrePoissonRecuperes as donnee}
-						<div class="p-4">
-							<p class="text-2xl font-bold text-center underline mb-4">
-								Capture numéro {donnee.id}
-							</p>
-							<table class="w-[450px] text-left">
-								<tr>
-									<th></th>
-									<th>Lac</th>
-									<th>Echantillon</th>
-								</tr>
-								<tr>
-									<td>Marqués</td>
-									<td>{nbrePoissonMarque}</td>
-									<td>{donnee.nbreMarque}</td>
-								</tr>
-								<tr>
-									<td>Total</td>
-									<td>{donnee.estimation.toFixed(2)}</td>
-									<td>{donnee.nbrePoissonDansEchantillon}</td>
-								</tr>
-							</table>
-						</div>
-					{/each}
-				</div>
 
 				<p class="text-3xl absolute right-8 bottom-4">
 					Moyenne des estimations :
