@@ -16,12 +16,18 @@
 	const visibleWidth: number = 800;
 	const visibleHeight: number = 600;
 
+	export function refreshAnimation() {
+		poissons = [];
+		clearInterval(poissonIntervalAnimation);
+		ajoutPoissons();
+		bougerPoissons();
+	}
+
 	onMount(() => {
 		window.addEventListener('resize', onResize);
 		onResize();
 
-		ajoutPoissons();
-		bougerPoissons();
+		refreshAnimation();
 	});
 
 	function onResize() {
@@ -46,22 +52,18 @@
 				{
 					x: RandomInt(0 - lacSize / 2, lacSize + lacSize / 2),
 					y: RandomInt(0 - lacSize / 2, lacSize + lacSize / 2),
-					direction: [
-						'Left',
-						'Right',
-						'Up',
-						'Down',
-						'TopLeft',
-						'TopRight',
-						'BottomLeft',
-						'BottomRight'
-					][RandomInt(0, 7)],
+					direction: getRandomDirection(),
 					int: RandomInt(0, 40)
 				}
 			];
 		}
 	}
 
+	function getRandomDirection(): string {
+		return ['Left', 'Right', 'Up', 'Down', 'TopLeft', 'TopRight', 'BottomLeft', 'BottomRight'][
+			RandomInt(0, 7)
+		];
+	}
 	function bougerPoissons() {
 		// Fait bouger les poissons aléatoirement
 		poissonIntervalAnimation = setInterval(() => {
@@ -70,9 +72,7 @@
 					poisson.int < 40
 						? poisson.direction
 						: RandomInt(0, 2) == 0
-							? ['Left', 'Right', 'Up', 'Down', 'TopLeft', 'TopRight', 'BottomLeft', 'BottomRight'][
-									RandomInt(0, 7)
-								]
+							? getRandomDirection()
 							: poisson.direction;
 				let x = poisson.x;
 				let y = poisson.y;

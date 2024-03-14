@@ -2,15 +2,21 @@
 	import Lac from '$lib/Components/Lac.svelte';
 
 	let minPoisson = 500; // Le nombre minimum de poissons
-	let maxPoisson = 1000; // Le nombre maximum de poissons
+	let maxPoisson = 3000; // Le nombre maximum de poissons
 	let vitesse = 3;
 
 	let lacSize = 4000; // Taille du lac
+
+	let lac: Lac;
+
+	$: if ((lacSize || minPoisson || maxPoisson) && lac) {
+		lac.refreshAnimation();
+	}
 </script>
 
 <div class="w-screen h-screen bg-red-500" id="main">
 	<div class="h-screen pt-5 pl-5 xl:w-[60%] lg:w-[50%] w-[40%]">
-		<Lac {minPoisson} {maxPoisson} {vitesse} {lacSize} />
+		<Lac bind:this={lac} {minPoisson} {maxPoisson} {vitesse} {lacSize} />
 
 		<h1 class="text-5xl font-bold">CMR Simulator</h1>
 
@@ -22,40 +28,54 @@
 		</p>
 
 		<div>
-			<h2 class="text-3xl mt-5">Paramètres</h2>
+			<h2 class="text-3xl mt-5 font-bold">Paramètres</h2>
 
 			<div class="flex flex-col space-y-5 mt-5">
 				<div class="flex flex-col space-y-2">
-					<label for="minPoisson" class="text-xl">Nombre minimum de poissons</label>
-					<input
-						type="number"
-						id="minPoisson"
-						class="w-20 p-2 border-2 border-blue-900 rounded-md"
-						bind:value={minPoisson}
-					/>
+					<label for="minPoisson" class="text-xl"
+						><span class="underline">Nombre de poissons :</span>
+						<small class="text-gray-600"><i>à adapter selon la taille du lac</i></small></label
+					>
+					<div class="flex items-center gap-x-3 text-lg">
+						<p>Entre</p>
+						<input
+							type="number"
+							id="minPoisson"
+							class="w-20 px-2 pt-1 border-2 border-blue-900 rounded-md"
+							bind:value={minPoisson}
+						/>
+						<p>et</p>
+						<input
+							type="number"
+							id="maxPoisson"
+							class="w-20 px-2 pt-1 border-2 border-blue-900 rounded-md"
+							bind:value={maxPoisson}
+						/>
+					</div>
 				</div>
 
 				<div class="flex flex-col space-y-2">
-					<label for="maxPoisson" class="text-xl">Nombre maximum de poissons</label>
-					<input
-						type="number"
-						id="maxPoisson"
-						class="w-20 p-2 border-2 border-blue-900 rounded-md"
-						bind:value={maxPoisson}
-					/>
-				</div>
+					<div class="flex items-center gap-x-4">
+						<label for="maxPoisson" class="text-xl underline">Taille du lac :</label>
 
-				<div class="flex flex-col space-y-2">
-					<label for="vitesse" class="text-xl">Vitesse des poissons</label>
-					<input
-						type="number"
-						id="vitesse"
-						min="1"
-						class="w-20 p-2 border-2 border-blue-900 rounded-md"
-						bind:value={vitesse}
-					/>
+						<input
+							type="range"
+							id="maxPoisson"
+							min="500"
+							max="30000"
+							class="w-48"
+							bind:value={lacSize}
+						/>
+
+						<p class="px-3 pt-1.5 pb-1 bg-white rounded-xl border-2 border-gray-400">{lacSize}</p>
+					</div>
 				</div>
 			</div>
+
+			<button
+				class="px-4 pt-2 pb-1.5 text-xl bg-[#a1e3c4] border-[#6ca472] shadow-xl rounded-xl border-4 mt-10 duration-150 hover:bg-[#84c3a6]"
+				>Commencer la simulation</button
+			>
 		</div>
 	</div>
 </div>
