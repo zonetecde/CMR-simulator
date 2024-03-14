@@ -108,7 +108,10 @@
 			Bienvenue dans le simulateur de <b>C</b>apture, <b>M</b>arquage et <b>R</b>ecapture. Vous
 			pouvez grâce à ce simulateur visualiser le comportement des poissons dans leur espace naturel
 			afin de comprendre la technique CMR. Vous pourrez ainsi tenter d'estimer la population de
-			poissons dans ce lac.
+			poissons dans ce lac. De
+			<a href="https://www.rayanestaszewski.fr" class="text-blue-800 underline" target="_blank"
+				>Rayane STASZEWSKI</a
+			>.
 		</p>
 
 		{#if !hasSimulationStarted}
@@ -119,8 +122,7 @@
 					<div class="flex flex-col space-y-2">
 						<label for="minPoisson" class="text-xl"
 							><span class="underline">Nombre de poissons :</span>
-							<small class="text-gray-600"><i>à adapter selon la taille du lac</i></small></label
-						>
+						</label>
 						<div class="flex items-center gap-x-3 text-lg">
 							<p>Entre</p>
 							<input
