@@ -22,8 +22,10 @@
 	export function refreshAnimation() {
 		poissons = [];
 		clearInterval(poissonIntervalAnimation);
-		ajoutPoissons();
+		const nbre = ajoutPoissons();
 		bougerPoissons();
+
+		return nbre;
 	}
 
 	onMount(() => {
@@ -62,6 +64,8 @@
 				}
 			];
 		}
+
+		return nombrePoisson;
 	}
 
 	function getRandomDirection(): string {
@@ -70,7 +74,7 @@
 		];
 	}
 
-	function bougerPoissons() {
+	export function bougerPoissons() {
 		// Fait bouger les poissons aléatoirement
 		poissonIntervalAnimation = setInterval(() => {
 			poissons = poissons.map((poisson) => {
@@ -136,54 +140,55 @@
 	 * Vérifie si le poisson est visible dans l'enclos
 	 * @param poisson Coordonnées du poisson
 	 */
-	function isFishVisible(poisson: Coordonnees) {
-		const fishWidth = 100;
-		const fishHeight = 100;
+	let fishWidth = 100;
+	let fishHeight = 100;
 
-		const fishLeft = visibleWidth / 2 + poisson.x - lacSize / 2;
-		const fishTop = visibleHeight / 2 + poisson.y - lacSize / 2;
+	function isFishVisible(poisson: Coordonnees) {
+		const fishLeft = poisson.x - lacSize / 2;
+		const fishTop = poisson.y - lacSize / 2;
 
 		const fishRight = fishLeft + fishWidth;
 		const fishBottom = fishTop + fishHeight;
 
-		const enclosLeft = 0;
-		const enclosTop = 0;
-		const enclosRight = visibleWidth;
-		const enclosBottom = visibleHeight;
+		const enclosLeft = -visibleWidth / 2;
+		const enclosTop = -visibleHeight / 2;
+		const enclosRight = visibleWidth / 2;
+		const enclosBottom = visibleHeight / 2;
 
 		return (
 			fishRight >= enclosLeft &&
 			fishLeft <= enclosRight &&
 			fishBottom >= enclosTop &&
-			fishTop - fishHeight <= enclosBottom
+			fishTop <= enclosBottom
 		);
 	}
 
 	export async function captureFish(number: number) {
 		captureAnim = true;
+		clearInterval(poissonIntervalAnimation);
 
-		await delay(400);
+		await delay(200);
 
 		main.classList.remove('scale-0');
 		main.classList.add('scale-100');
 
-		await delay(2000);
+		await delay(1000);
 
 		main.classList.remove('scale-100');
 		main.classList.add('scale-0');
 
-		await delay(1000);
+		await delay(500);
 
 		// Capture les <number> poissons les plus proches du centre (0, 0) et les renvoies
 		const poissonsProches = poissons
-			.sort((a, b) => {
-				const distanceA = Math.sqrt(a.x ** 2 + a.y ** 2);
-				const distanceB = Math.sqrt(b.x ** 2 + b.y ** 2);
-				return distanceA - distanceB;
-			})
+			.sort(
+				(a, b) =>
+					Math.abs(lacSize / 2 - a.x) +
+					Math.abs(lacSize / 2 - a.y) -
+					(Math.abs(lacSize / 2 - b.x) + Math.abs(lacSize / 2 - b.y))
+			)
 			.slice(0, number);
 
-		clearInterval(poissonIntervalAnimation);
 		captureAnim = false;
 
 		return poissonsProches;
@@ -207,8 +212,7 @@
 
 <div
 	id="enclos"
-	class={'absolute duration-700 bg-blue-400 border-4 border-blue-900 rounded-xl overflow-hidden ' +
-		(captureAnim ? 'left-1/3 top-1/4 origin-top-left' : 'top-5 right-5 origin-top-right')}
+	class={'absolute duration-1000 bg-blue-400 border-4 border-blue-900 rounded-xl overflow-hidden top-5 right-5 origin-top-right'}
 	style="width: {visibleWidth}px; height: {visibleHeight}px;"
 >
 	{#if captureAnim}

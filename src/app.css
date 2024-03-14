@@ -6,4 +6,11 @@
 
 body {
 	font-family: 'League Spartan', sans-serif;
+
+	background-color: #e5e5f7;
+	opacity: 0.8;
+	background-image: radial-gradient(#9093bb 1px, #c2c2fc 1px);
+	background-size: 10px 10px;
+
+	overflow-x: hidden;
 }
