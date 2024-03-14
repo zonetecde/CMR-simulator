@@ -2,7 +2,7 @@
 	import type Coordonnees from '$lib/Coordonnees';
 	import { RandomInt } from '$lib/Func';
 	import { onMount } from 'svelte';
-	import { fade } from 'svelte/transition';
+	import { fade, scale } from 'svelte/transition';
 
 	export let minPoisson: number;
 	export let maxPoisson: number;
@@ -15,6 +15,9 @@
 
 	const visibleWidth: number = 800;
 	const visibleHeight: number = 600;
+
+	let captureAnim: boolean = false;
+	let main: HTMLImageElement;
 
 	export function refreshAnimation() {
 		poissons = [];
@@ -53,7 +56,9 @@
 					x: RandomInt(0 - lacSize / 2, lacSize + lacSize / 2),
 					y: RandomInt(0 - lacSize / 2, lacSize + lacSize / 2),
 					direction: getRandomDirection(),
-					int: RandomInt(0, 40)
+					int: RandomInt(0, 40),
+					id: i,
+					marked: false
 				}
 			];
 		}
@@ -64,6 +69,7 @@
 			RandomInt(0, 7)
 		];
 	}
+
 	function bougerPoissons() {
 		// Fait bouger les poissons aléatoirement
 		poissonIntervalAnimation = setInterval(() => {
@@ -118,7 +124,9 @@
 					x: x,
 					y: y,
 					direction,
-					int: poisson.int > 40 ? 0 : poisson.int + RandomInt(0, vitesse)
+					int: poisson.int > 40 ? 0 : poisson.int + RandomInt(0, vitesse),
+					id: poisson.id,
+					marked: poisson.marked
 				};
 			});
 		}, 100);
@@ -150,19 +158,74 @@
 			fishTop - fishHeight <= enclosBottom
 		);
 	}
+
+	export async function captureFish(number: number) {
+		captureAnim = true;
+
+		await delay(400);
+
+		main.classList.remove('scale-0');
+		main.classList.add('scale-100');
+
+		await delay(2000);
+
+		main.classList.remove('scale-100');
+		main.classList.add('scale-0');
+
+		await delay(1000);
+
+		// Capture les <number> poissons les plus proches du centre (0, 0) et les renvoies
+		const poissonsProches = poissons
+			.sort((a, b) => {
+				const distanceA = Math.sqrt(a.x ** 2 + a.y ** 2);
+				const distanceB = Math.sqrt(b.x ** 2 + b.y ** 2);
+				return distanceA - distanceB;
+			})
+			.slice(0, number);
+
+		clearInterval(poissonIntervalAnimation);
+		captureAnim = false;
+
+		return poissonsProches;
+	}
+
+	export function markFish(poissonsToMark: Coordonnees[]) {
+		poissons = poissons.map((p) => {
+			if (poissonsToMark.some((poisson) => poisson.id === p.id)) {
+				return { ...p, marked: true };
+			}
+			return p;
+		});
+
+		bougerPoissons();
+	}
+
+	function delay(ms: number) {
+		return new Promise((resolve) => setTimeout(resolve, ms));
+	}
 </script>
 
 <div
 	id="enclos"
-	class="absolute top-5 right-5 origin-top-right bg-blue-400 border-4 border-blue-900 rounded-xl overflow-hidden"
+	class={'absolute duration-700 bg-blue-400 border-4 border-blue-900 rounded-xl overflow-hidden ' +
+		(captureAnim ? 'left-1/3 top-1/4 origin-top-left' : 'top-5 right-5 origin-top-right')}
 	style="width: {visibleWidth}px; height: {visibleHeight}px;"
 >
+	{#if captureAnim}
+		<img
+			src="hand.png"
+			alt="main"
+			bind:this={main}
+			class="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 scale-0 duration-1000"
+		/>
+	{/if}
+
 	{#each poissons as poisson}
 		{#if isFishVisible(poisson)}
 			<img
 				transition:fade
 				alt="poisson"
-				src="fish.png"
+				src={poisson.marked ? 'markedfish.png' : 'fish.png'}
 				class={`w-20 object-cover h-10 absolute duration-500 ${
 					poisson.direction === 'Right' ? 'flip' : ''
 				} ${poisson.direction === 'Up' ? 'rotate-90' : ''} ${

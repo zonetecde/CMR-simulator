@@ -1,4 +1,5 @@
 export default interface Coordonnees {
+	id: number;
 	x: number;
 	y: number;
 	direction:
@@ -12,4 +13,5 @@ export default interface Coordonnees {
 		| 'BottomRight'
 		| string;
 	int: number;
+	marked: boolean;
 }
