@@ -4,7 +4,7 @@
 
 	let minPoisson = 500; // Le nombre minimum de poissons
 	let maxPoisson = 3000; // Le nombre maximum de poissons
-	let vitesse = 3;
+	let vitesse = 1.5;
 
 	let lacSize = 4000; // Taille du lac
 
@@ -194,7 +194,7 @@
 
 				<label>
 					Vitesse de déplacement des poissons :
-					<input type="range" min="1" max="600" class="w-full" bind:value={vitesse} />
+					<input type="range" min="0.1" max="600" class="w-full" bind:value={vitesse} />
 				</label>
 
 				<div class="grid grid-cols-2 grid-rows-2 gap-x-8 gap-y-3 w-full">
